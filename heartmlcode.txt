@@ -1,0 +1,81 @@
+# import all lib
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
+
+# upload the heart data csv file with path
+heart_data = pd.read_csv('/content/heart.csv')
+
+
+""" 
+# test data by printing 
+heart_data.head()
+
+# pront last 5 row
+heart_data.tail()
+
+# printing rows & columns
+heart_data.shape
+
+# getting some info about data
+heart_data.info()
+
+# getting the missing values 
+heart_data.isnull().sum()
+
+# statistical measures about data set 
+heart_data.describe()
+
+#CHECKING THE DISTRIBUTION OF TARGET VARIABLE
+heart_data['target'].value_counts()
+
+"""
+# spliting the data in two as training data and testing data
+# 1--> Defictive heart
+# 2--> Healthy heart
+
+# splitting features and target
+X = heart_data.drop(columns='target', axis=1)
+Y=heart_data['target']
+
+# print(X)
+# print(Y)
+
+# splitting the data into train and test data
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.25, stratify=Y, random_state=2)
+# print(X.shape,X_train.shape, X_test.shape)
+
+# model treining logistic regression model
+model = LogisticRegression()
+#training
+model.fit(X_train,Y_train)
+
+# model evaluation using test data
+X_train_prediction = model.predict(X_train)
+training_data_accuracy=accuracy_score(X_train_prediction, Y_train)
+
+print('Accuracy on Training Data :', training_data_accuracy)
+
+# model evaluation using training data
+X_test_prediction = model.predict(X_test)
+test_data_accuracy=accuracy_score(X_test_prediction, Y_test)
+
+
+print('Accuracy on Test Data :', test_data_accuracy)
+
+# accuracy of traning data must be ecual to the test data with a difference of 20% 
+
+# predective system (M1 Engine)
+input_data=(39,1,0,118,219,0,1,140,0,1.2,1,0,3)
+
+# change input array to numpy
+input_data_as_numpy_array=np.asarray(input_data)
+
+# reshape the numpy array as we are predicting
+input_data_reshaped = input_data_as_numpy_array.reshape(1,-1)
+
+prediction = model.predict(input_data_reshaped)
+
+print(prediction)
